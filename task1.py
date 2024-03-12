@@ -13,10 +13,10 @@ source = AsyncPath(args["source"])
 output = AsyncPath(args["output"])
 
 
-async def get_folders(path: AsyncPath):
+async def read_folder(path: AsyncPath):
     async for file in path.iterdir():
         if await file.is_dir():
-            await get_folders(file)
+            await read_folder(file)
         else:
             await copy_file(file)
 
@@ -33,7 +33,6 @@ async def copy_file(file: AsyncPath):
 if __name__ == "__main__":
     format = "%(threadName)s %(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
-    asyncio.run(get_folders(source))
+    asyncio.run(read_folder(source))
 
     print(f"All files copied to {output}.")
-    
