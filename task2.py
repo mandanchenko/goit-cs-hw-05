@@ -40,8 +40,11 @@ async def reduce_function(key_values):
 async def map_reduce(text_link):
     # Видалення знаків пунктуації
     text = await get_text(text_link)
-    text = remove_punctuation(text)
-    words = text.split()
+    if text:
+        text = remove_punctuation(text)
+        words = text.split()
+    else:
+        return {}
 
     # Паралельний Мапінг
     mapped_result = await asyncio.gather(*[map_function(word) for word in words])
@@ -73,7 +76,7 @@ def visualize_top_words(counted_words, top_n=10):
 
 if __name__ == "__main__":
     # Вхідний текст для обробки
-    url = "https://gutenberg.net.au/ebooks01/0100331.txt"
+    url = "https://gutenberg.net.au/ebooks01/0100181.txt"
     result = asyncio.run(map_reduce(url))
     print(result)
     visualize_top_words(result)
